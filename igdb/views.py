@@ -10,14 +10,23 @@ from .serializers import GameSerializer, CustomUserSerializer
 
 # Create your views here.
 
-# Django REST Framework 
+# CRUD endpoints
 class GameListCreate(generics.ListCreateAPIView):
-    queryset = Game.objects.all()
     serializer_class = GameSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Game.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class GameRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Game.objects.all()
     serializer_class = GameSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Game.objects.filter(user=self.request.user)
 
 # Views that will be used to create homepage of mygamelist
 def most_popular(request):
@@ -35,13 +44,8 @@ def released_soon(request):
     r = release(body)
     return HttpResponse(r)
 
-# Register/Signin forms
-
+# Register endpoint
 class register(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [AllowAny]
-
-def sign_in(request):
-    return
-

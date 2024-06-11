@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -12,5 +12,5 @@ urlpatterns = [
     path("api/games/", views.GameListCreate.as_view(), name='game-list-create'),
     path("api/games/<int:pk>/", views.GameRetrieveUpdateDestroy.as_view(), name='game-retrieve-update-destroy'),
     path("api/register/", views.register.as_view(), name="register"),
-    path("api/sign_in/", views.sign_in, name="sign_in"),
+    path("api-auth/", include("rest_framework.urls")),
 ]

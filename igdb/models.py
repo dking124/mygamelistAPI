@@ -38,10 +38,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class Game(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='games')
-    igdb_id = models.CharField(max_length=100, unique=True)
+    igdb_id = models.CharField(max_length=100)
     is_completed = models.BooleanField(default=False)
     rating = models.IntegerField(null=True, blank=True)
     total_hours = models.DecimalField(max_digits=5, decimal_places=1, default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'igdb_id'], name='unique game')
+        ]
 
     def __str__(self):
         return self.igdb_id
