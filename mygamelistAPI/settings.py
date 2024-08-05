@@ -14,12 +14,12 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 
-env = environ.Env()
-environ.Env.read_env()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env()
+#env = environ.FileAwareEnv()
+env.read_env(Path(str(BASE_DIR)) / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -79,6 +79,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:9000",
+    "http://localhost:3000"
 ]
 
 ROOT_URLCONF = 'mygamelistAPI.urls'
