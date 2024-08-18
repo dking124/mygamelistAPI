@@ -19,6 +19,6 @@ def release(body):
     url = 'https://api.igdb.com/v4/release_dates'
     current_time = time.time()
     curr_time = str(current_time)
-    body2 = body[:22] + curr_time[:-8] + body[22:]
+    body2 = body[:87] + curr_time[:-8] + body[87:]
     r = wrapper(url, body2)
     return r

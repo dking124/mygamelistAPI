@@ -1,8 +1,8 @@
-#from django.contrib.auth import login, authenticate
-from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from .igdbwrapper import *
 from .models import Game, CustomUser
 from .serializers import GameSerializer, CustomUserSerializer
@@ -30,18 +30,25 @@ class GameRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 # Views that will be used to create homepage of mygamelist
 def most_popular(request):
     r = wrapper('https://api.igdb.com/v4/games',
-                'fields name,total_rating,total_rating_count; where total_rating_count>100 ; sort total_rating desc;')
+                'fields name,total_rating,total_rating_count,cover.url; where total_rating_count>100 ; sort total_rating desc;')
     return HttpResponse(r)
 
 def recently_released(request):
-    body = 'fields *; where date < ; sort date desc;'
+    body = 'fields game.name,game.total_rating,game.total_rating_count,game.cover.url; where date < ; sort date desc;'
     r = release(body)
     return HttpResponse(r)
 
 def released_soon(request):
-    body = 'fields *; where date > ; sort date asc;'
+    body = 'fields game.name,game.total_rating,game.total_rating_count,game.cover.url; where date > ; sort date asc;'
     r = release(body)
     return HttpResponse(r)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def search(request):
+    r = wrapper('https://api.igdb.com/v4/games',
+                'search ' + '"' + request.data + '"; fields name;')
+    return Response(r)
 
 # Register endpoint
 class register(generics.CreateAPIView):
