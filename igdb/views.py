@@ -27,6 +27,15 @@ class GameRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Game.objects.filter(user=self.request.user)
 
+class UserDetails(generics.GenericAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
+
 # Views that will be used to create homepage of mygamelist
 def most_popular(request):
     r = wrapper('https://api.igdb.com/v4/games',

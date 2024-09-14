@@ -9,6 +9,7 @@ urlpatterns = [
     path("released-soon/", views.released_soon, name="released-soon"),
     path("search/", views.search, name="search"),
     path("api/token/", TokenObtainPairView.as_view(), name="token"),
+    path("api/user/", views.UserDetails.as_view(), name="user-details"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh-token"),
     path("api/games/", views.GameListCreate.as_view(), name='game-list-create'),
     path("api/games/<int:pk>/", views.GameRetrieveUpdateDestroy.as_view(), name='game-retrieve-update-destroy'),
